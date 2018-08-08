@@ -1,8 +1,6 @@
 ---
 title: Home
-media_order: grav_header.jpeg
-header_image: grav_header.jpeg
-body_classes: 'title-center title-h1h2'
+body_classes: title-center title-h1h2
 ---
 
 # Say Hello to Grav!
