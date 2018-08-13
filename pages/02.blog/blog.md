@@ -1,5 +1,4 @@
 ---
-title: 'Beneke.cc Blog'
 header_image: grav_header.jpeg
 menu: Blog
 child_type: item
