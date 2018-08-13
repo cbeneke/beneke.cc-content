@@ -2,11 +2,11 @@
 title: 'remotely call a bash function'
 published: true
 date: '12-12-2017 00:00'
-author: 'Christian Beneke'
 taxonomy:
     tag:
         - Short
         - Bash
+author: 'Christian Beneke'
 ---
 
 I've just recently discovered the bash builtin `typeset -f`. This command will print the definition of all (or a given) function(s).
