@@ -1,5 +1,6 @@
 ---
-title: ' '
+title: '    '
+menu: Home
 ---
 
 # Welcome!
