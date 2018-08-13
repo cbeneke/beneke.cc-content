@@ -2,6 +2,7 @@
 title: 'remotely call a bash function'
 published: true
 date: '12-12-2017 12:00'
+author: 'Christian Beneke'
 taxonomy:
     tag:
         - Short
