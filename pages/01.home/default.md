@@ -1,7 +1,7 @@
 ---
 title: Welcome!
-media_order: keyboard.jpg
-header_image: keyboard.jpg
+media_order: worker.jpg
+header_image: worker.jpg
 menu: Home
 ---
 
