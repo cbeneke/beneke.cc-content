@@ -2,6 +2,8 @@
 title: '<\Untitled>'
 published: true
 date: '20-12-2015 00:00'
+metadata:
+    author: 'Christian Beneke'
 ---
 
 And now I'm sitting here in front of my laptop thinking about what to write as first post on my new blog. You could say that shouldn't be too hard, but who doesn't get a chill when writing on the first page of a new notepad?
