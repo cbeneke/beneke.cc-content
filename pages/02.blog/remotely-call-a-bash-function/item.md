@@ -1,5 +1,5 @@
 ---
-title: 'Remote-Call a Bash Function'
+title: 'Remote-call a bash function'
 published: true
 date: '12-12-2017 00:00'
 taxonomy:
