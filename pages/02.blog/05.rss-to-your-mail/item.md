@@ -5,6 +5,7 @@ date: '12-06-2016 00:00'
 taxonomy:
     tag:
         - Server
+author: 'Christian Beneke'
 ---
 
 I'm one of those guys checking his mail more often than declining candy crush invites. Meaning if I get a mail I normally see it on at least two devices. So the simple thought: why not getting RSS feeds you are interested in via mail?
