@@ -1,5 +1,6 @@
 ---
 title: 'Get your logs together'
+author: 'Christian Beneke'
 published: true
 publish_date: '03-02-2016 00:00'
 taxonomy:
