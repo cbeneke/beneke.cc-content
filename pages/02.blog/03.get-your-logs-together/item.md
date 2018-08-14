@@ -2,6 +2,9 @@
 title: 'Get your logs together'
 published: true
 publish_date: '03-02-2016 00:00'
+taxonomy:
+    tag:
+        - Server
 ---
 
 Everyone in charge of at least a small virtualized server instance knows the struggle of debugging some software and grepping through the logs in "thousands" of locations.
