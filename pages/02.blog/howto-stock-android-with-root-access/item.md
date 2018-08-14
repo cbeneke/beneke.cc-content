@@ -1,5 +1,12 @@
 ---
 title: 'HowTo: Stock Android with root-Access'
+published: true
+date: '30-09-2017 00:00'
+taxonomy:
+    tag:
+        - Android
+        - HowTo
+author: 'Christian Beneke'
 ---
 
 Google's SafetyNet is a nightmare for all users on Android devices if you want to have a official operating system but also use apps like Snapchat, Pokemon Go or Mario Run.
