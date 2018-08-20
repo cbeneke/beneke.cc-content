@@ -3,8 +3,8 @@ title: 'Setting up a distributed blog'
 published: false
 taxonomy:
     tag:
-        - Short
-        - Bash
+        - Kubernetes
+        - HowTo
 author: 'Christian Beneke'
 ---
 
