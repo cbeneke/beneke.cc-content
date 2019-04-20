@@ -35,4 +35,6 @@ The kubernetes cluster consists of 2 C21 hetzner cloud instances (2 vCPUs, 4GiB 
 
 Luckily I managed to set up a adequate implemenation for both services myself. I am currently writing up a how, which will be linked here as soon as published.
 
-As I now have a fully functional kubernetes cluster, the migration can begin! (to be continued...)
+As I now have a fully functional kubernetes cluster, the migration can begin!
+
+***To be continued...***
