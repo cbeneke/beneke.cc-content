@@ -9,31 +9,32 @@ The 'Path to Kubernetes' posts will be a short series of posts, describing multi
 
 ## Preparations
 
-I am working on and with kubernetes for about a year now, and I think its an amazing software. Therefor it was only a logical step, that I would migrate my private infrastructure into kubernetes too.
-As I've got some time on my hands currently, and am - by on call - required to be virtually connected all the time anyways I wanted to use the long weekend to start the long overdue server migration. This will be a short series of articles, what problems I encountered and if or how I solved them.
+I am working on and with kubernetes for about a year now, and I think it's an amazing software. Therefore it was only a logical step, that I would migrate my private infrastructure into kubernetes too.
+As I've got some time on my hands currently, and am - by being oncall - required to be virtually connected all the time anyways I wanted to use the long weekend to start the long overdue server migration. This will be a short series of articles about what problems I encountered and if or how I solved them.
 
 To begin with I want to give you a short overview of the services I have to migrate:
 
-* nextCloud instance with about 100GiB of Data
-* mailserver
+* a nextCloud instance with about 100GiB of data
+* a mailserver
 * this blog
 * some static websites
 * some mysql databases
 * varoius redis cache servers
-* ldap server
-* nameserver
+* a ldap server
+* a (set of) nameserver(s)
 * VPN service
+* monitoring
 * various small applications
 
-This is a short, but for one weekend still intense list of services to migrate. But as I could plan the migration, I already set up a new kubernetes cluster on hetzner cloud instances and started to migrate the data of my nextcloud into amazon s3.
+This is a short, but for one weekend still intense list of services to migrate. But as I could plan the migration, I already set up a new kubernetes cluster on Hetzner cloud instances and started to migrate the data of my nextcloud into amazon s3.
 
 ## Setup of the kubernetes cluster
-The kubernetes cluster consists of 2 C21 hetzner cloud instances (2 vCPUs, 4GiB RAM, local storage) as worker- and a single C11 (1 vCPU, 2GiB RAM, local storage) as master-node. This setup is not HA, but that was and will never be a requirement for my private infrastructure. Unfortunately Hetzner does not offer two critical services, which are offered by other typical cloud provioders:
+The kubernetes cluster consists of two CX21 Hetzner cloud instances (2 vCPUs, 4GiB RAM, local storage) as worker- and a single CX11 (1 vCPU, 2GiB RAM, local storage) as master-node. This setup is not HA, but that was and will never be a requirement for my private infrastructure. Unfortunately Hetzner does not offer two critical services, which are offered by other typical cloud provioders:
 
 * LBaaS
 * a private network
 
-Luckily I managed to set up a adequate implemenation for both services myself. I am currently writing up a how, which will be linked here as soon as published.
+Luckily I managed to set up a adequate implemenation for both services myself and I'm currently writing up a how to, which will be linked here as soon as published.
 
 As I now have a fully functional kubernetes cluster, the migration can begin!
 
