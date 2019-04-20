@@ -14,7 +14,7 @@ As I've got some time on my hands currently, and am - by being oncall - required
 
 To begin with I want to give you a short overview of the services I have to migrate:
 
-* a nextCloud instance with about 100GiB of data
+* a nextcloud instance with about 100GiB of data
 * a mailserver
 * this blog
 * some static websites
