@@ -4,6 +4,11 @@ date: '02:02 20-04-2019'
 author: 'Christian Beneke'
 ---
 
+## Disclaimer
+The 'Path to Kubernetes' posts will be a short series of posts, describing multiple steps of my root-server to kubernetes migration.
+
+## Preparations
+
 I am working on and with kubernetes for about a year now, and I think its an amazing software. Therefor it was only a logical step, that I would migrate my private infrastructure into kubernetes too.
 As I've got some time on my hands currently, and am - by on call - required to be virtually connected all the time anyways I wanted to use the long weekend to start the long overdue server migration. This will be a short series of articles, what problems I encountered and if or how I solved them.
 
