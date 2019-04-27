@@ -1,6 +1,7 @@
 ---
 title: 'Path to Kubernetes: NextCloud'
-published: false
+published: true
+date: '27-04-2019 20:53'
 author: 'Christian Beneke'
 ---
 
@@ -31,6 +32,7 @@ The scripts will use some variables, which have to be replaced before executing 
 * `<mysql_database>`: The name of the mysql database
 * `<mysql_user>` and `<mysql_password>`: Credentials with readwrite access to the NextCloud mysql database
 * `<s3_bucket>`: The name of your s3 bucket
+* `<s3_bucket_region>`: The region of your s3 bucket (e.g. `eu-central-1` for Frankfurt)
 * `<aws_accesskey>` and `<aws_secretkey>`: Credentials with readwrite access to the s3 bucket
 * `</path/to/installation>`: The base directory of your nextcloud installation
 
@@ -41,7 +43,8 @@ $ cd </path/to/installation>
 $ sudo -u www-data php occ maintenance:mode --on
 ```
 
-and executed the following script
+#### Step 1 - sync the data to s3
+I used the following script to create a directory `s3_files` which contains correctly named symlinks to all files stored in the NextCloud
 
 ```
 #!/usr/bin/env bash
@@ -85,7 +88,7 @@ done < ../meta_file_list.txt
 cd ..; rm user_file_list.txt meta_file_list.txt
 ```
 
-This will create a directory `s3_files` which contains all correctly named symlinks to all files stored in the NextCloud. The basic idea is now to just sync these files into s3, but as a regular sync would've taken very long (about 5 days), I create a small wrapper script, which uploads up to 40 files in parallel and reduced the upload time to about 5 hours
+When the symlink creation is finished you should have a directoy with a lot of symlinks (about 50.000 in my case). If you check that the namings are correct, you should use `find` or the `-F` option of `ls`, to not sort the files. As a regular s3 sync would've taken very long (about 5 days), I create a small wrapper script, which uploads 40 files in parallel which reduced the upload time to about 5 hours
 
 ```
 #!/usr/bin/env bash
@@ -100,7 +103,24 @@ cd s3files
 find . | parallel -j40 upload
 ```
 
-Now the data is stored in s3 and the only the database needs to be updated to reflect the new location. I recommend to create a backup/dump of the database before the changes, to have the possibility to roll back the changes
+After the upload was finished I checked if the data was correctly stored, which might not be the case if some connections failed during the upload. I used the following script to validate that filename and filesize are equal
+
+```
+#!/usr/local/bin/env bash
+s3cmd ls s3://<s3_bucket>/ |awk '{print "$4 $3"}' | sort > files_s3.txt
+for f in $(find s3_files/ -type l | cut -d/ -f2); do
+  echo "s3://<s3_bucket>/$f $(ls -Ll s3_files/$f | awk '{print $5}')"
+done | sort > files_local.txt
+
+diff -ruN files_local.txt files_s3.txt
+```
+
+Files which were different I re-uploaded manually (using the above defined `upload()` function).
+
+#### Step 2 - Update the database
+If the upload was successful and there are no differences between the datasets, the database needs to be updated to reflect the new location. Please be aware, that up to this point no acutal changes were made to the NextCloud instance. Changing the database wrongly *will* break your NextCloud, so make sure that you really understand what you (or the scripts I give you) are doing.
+
+I recommend to create a backup/dump of the database before the changes, to have the possibility to roll back the changes
 
 ```
 $ mysqldump --result-file=dump.sql <mysql_database>
@@ -114,8 +134,9 @@ $ mysql --database=<mysql_database> --host=<mysql_host> --user=<mysql_user> --pa
 EOF
 ```
 
+#### Step 3 - Configure the objectstore
 
-## Configure the objectstore
+When the database is correctly updated we need to finalize the migration by adding the s3 store to the NextCloud configuration. Therefor edit the file `</path/to/installation>/config/config.json` and add the `objectstore' definition
 
 ```
   1 'objectstore' =>
@@ -128,8 +149,19 @@ EOF
   8     'key' => '<aws_accesskey>',
   9     'secret' => '<aws_secretkey>',
  10     'use_ssl' => true,
- 11     'region' => 'eu-central-1',
+ 11     'region' => '<s3_bucket_region>',
  12     'use_path_style' => false,
  13   ),
  14 ),
 ```
+
+When the config is updated you can disable the maintenance mode
+
+```
+$ cd </path/to/installation>
+$ sudo -u www-data php occ maintenance:mode --off
+```
+
+Your NextCloud will now use the data stored in s3 and you can safely delete the old files in the `</path/to/installation>/data` directory.
+
+***To be continued...***
