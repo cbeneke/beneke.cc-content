@@ -5,7 +5,7 @@ author: 'Christian Beneke'
 ---
 
 ## Disclaimer
-The 'Path to Kubernetes' posts will be a short series of posts, describing multiple steps of my root-server to kubernetes migration.
+The *Path to Kubernetes* articles are a short series, describing multiple steps of my root-server to kubernetes migration.
 
 ## Considerations
 In the [last post](/blog/path-to-kubernetes-nextcloud) I listed the services which I have to migrate to my new kubernetes cluster. One of the services listes was a nextCloud instance I am running for myself, some friends and my family. This instance is not too big, but still currently holds about 100 GiB of data. As the containers are started in a Kubernetes cluster they need to be reschedulable at any time, which requires considerations regarding the storage. A typical approach would be to just put the data in a [persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/), but nextCloud also supports [object storage](https://docs.nextcloud.com/server/16/admin_manual/configuration_files/primary_storage.html) as primary storage.
