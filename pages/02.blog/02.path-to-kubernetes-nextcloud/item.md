@@ -5,7 +5,7 @@ author: 'Christian Beneke'
 ---
 
 ## Disclaimer
-The 'Path to Kubernetes' posts will be a short series of posts, describing multiple steps of my root-server to kubernetes migration.
+The *Path to Kubernetes* articles are a short series, describing multiple steps of my root-server to Kubernetes migration.
 
 ## Preparations
 
