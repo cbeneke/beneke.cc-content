@@ -1,6 +1,6 @@
 ---
 title: 'Path to Kubernetes: NextCloud'
-date: '17:52 27-04-2019'
+published: false
 author: 'Christian Beneke'
 ---
 
