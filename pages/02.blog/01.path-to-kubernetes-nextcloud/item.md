@@ -19,8 +19,8 @@ To begin with I want to give you a short overview of the services I have to migr
 * this blog
 * some static websites
 * some mysql databases
-* varoius redis cache servers
-* a ldap server
+* various redis cache servers
+* an ldap server
 * a (set of) nameserver(s)
 * VPN service
 * monitoring
@@ -29,7 +29,7 @@ To begin with I want to give you a short overview of the services I have to migr
 This is a short, but for one weekend still intense list of services to migrate. But as I could plan the migration, I already set up a new kubernetes cluster on Hetzner cloud instances and started to migrate the data of my nextcloud into amazon s3.
 
 ## Setup of the kubernetes cluster
-The kubernetes cluster consists of two CX21 Hetzner cloud instances (2 vCPUs, 4GiB RAM, local storage) as worker- and a single CX11 (1 vCPU, 2GiB RAM, local storage) as master-node. This setup is not HA, but that was and will never be a requirement for my private infrastructure. Unfortunately Hetzner does not offer two critical services, which are offered by other typical cloud provioders:
+The kubernetes cluster consists of two CX21 Hetzner cloud instances (2 vCPUs, 4GiB RAM, local storage) as worker- and a single CX11 (1 vCPU, 2GiB RAM, local storage) as master-node. This setup is not HA, but that was and will never be a requirement for my private infrastructure. Unfortunately, Hetzner does not offer two critical services, which are offered by other typical cloud provioders:
 
 * LBaaS
 * a private network
