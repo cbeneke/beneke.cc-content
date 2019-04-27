@@ -87,7 +87,7 @@ done < ../meta_file_list.txt
 cd ..; rm user_file_list.txt meta_file_list.txt
 ```
 
-When the symlink creation is finished you should have a directoy with a lot of symlinks (about 50.000 in my case). If you check that the namings are correct, you should use `find` or the `-F` option of `ls` to not sort the files (otherwise it will be painfully slow). A regular `s3cmd sync` would've taken very long (about 5 days) to finish the data sync, so I created a small wrapper script, which uploads 40 files in parallel. This reduced the upload time to about 5 hours
+When the symlink creation is finished you should have a directoy with a lot of symlinks (about 60.000 in my case). If you check that the namings are correct, you should use `find` or the `-F` option of `ls` to not sort the files (otherwise it will be painfully slow). A regular `s3cmd sync` would've taken very long (about 5 days) to finish the data sync, so I created a small wrapper script, which uploads 40 files in parallel. This reduced the upload time to about 5 hours
 
 ```
 #!/usr/bin/env bash
