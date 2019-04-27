@@ -6,28 +6,27 @@ author: 'Christian Beneke'
 ---
 
 ## Disclaimer
-The *Path to Kubernetes* articles are a short series, describing multiple steps of my root-server to kubernetes migration.
+The *Path to Kubernetes* articles are a short series, describing multiple steps of my root-server to Kubernetes migration.
 
 ## Considerations
-In the [last post](/blog/path-to-kubernetes-nextcloud) I listed the services which I have to migrate to my new kubernetes cluster. One of the services listes was a NextCloud instance I am running for myself, some friends and my family. This instance is not too big, but still currently holds about 100 GiB of data. As the containers are started in a Kubernetes cluster they need to be reschedulable at any time, which requires considerations regarding the storage. A typical approach would be to just put the data in a [persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/), but NextCloud also supports [object storage](https://docs.nextcloud.com/server/16/admin_manual/configuration_files/primary_storage.html) as primary storage.
+In the [last post](/blog/path-to-kubernetes-nextcloud) I listed the services which I have to migrate to my new Kubernetes cluster. One of the services listed is a NextCloud instance I am running for myself, some friends and my family. This instance is not too big, but still holds about 100 GiB of data. As the installation will be located in containers after the migration to Kubernetes it needs to be reschedulable at any time, which requires considerations regarding the storage. A typical approach would be to just put the data in a [persistent volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and NextCloud also supports [object storage](https://docs.nextcloud.com/server/16/admin_manual/configuration_files/primary_storage.html) as primary storage.
 
 For me it was fairly easy to decide that I wanted to use the object storage as backend, because it has multiple advantages over a persistent volume:
 * **The storage is decoupled from the container**  
-  This means I can possibly run multiple containers accessing the same storage. Hetzner volumes can only be associated to one server, which results in the storage class supporting only ReadWriteOnce persistent volume claims. That means I would have to make sure to sync the data between the containers somehow, if I run multiple containers.
+  This means I can possibly run multiple containers accessing the same storage. Hetzner Cloud volumes can only be associated to one server, which results in the storage class supporting only ReadWriteOnce persistent volume claims. That means I would have to make sure to sync the data between the containers somehow, if I run multiple containers.
 * **Object storage is very cheap**  
-  Hetzner volumes are quite cheap too (about 5€ for 100GiB), but even on [Amazon s3](https://aws.amazon.com/s3/) I'm paying only about 2-3€ per month for the storage (and API calls).
+  Hetzner volumes are quite cheap too (about 5€/month for 100GiB), but even on [Amazon s3](https://aws.amazon.com/s3/) I'm only paying about 2-3€ per month for the storage (and API calls).
 * **Object storage scales**  
-  The amount of data in my NextCloud is very steady most of the time, but there are points in time when the storage increases drastically (e.g. a new user). When using (hetzner cloud volume) persistent volumes I have to decide about the size before creating the persistent volume claim and can not resize the image later. That means I either have to opt for a bigger volume size or migrate the data to a new volume as soon as I'm in need of more storage. On object storage you only pay for what you use and (especially on a large scale vendor like amazon) the storage size can grow indefinetly.
+  The amount of data in my NextCloud is very steady most of the time, but there are points in time when the storage increases drastically (e.g. a new user). When using (Hetzner Cloud volume based) persistent volumes I have to decide about the sizing before creating the persistent volume claim and can not resize the image later. That means I either have to opt for a bigger volume size or migrate the data to a new volume as soon as I'm in need of more storage. On object storage you only pay for what you use and (especially on a large scale vendor like amazon) the storage size can grow (almost) indefinetly.
 
-The biggest downside (which I only found after the migration) is, that NextCloud currently has a [bug](https://github.com/nextcloud/server/issues/11826) which breaks encryption of the data, if the primary storage is an object store. But for me, the upsides of an object store overrule this problem.
-
+*The biggest downside (which I only found after the migration) is, that NextCloud currently has a [bug](https://github.com/nextcloud/server/issues/11826) which breaks encryption of the data, if the primary storage is an object store. But for me, the upsides of an object store overruled this problem.*
 
 ## Migrate the data
 The very first step was to create a new bucket on amazon s3, as NextCloud assumes exclusive usage over the whole bucket. They also decided to use a different layout for the files on object storage compared to a regular filesystem, which means I have to create a mapping between the data before copying the files.
 
-On a regular filesystem NextCloud stores the data in the data directory in the same folder structure as the files are saved by the user. On object storage the files are all located in the base directory and named after the file-id in the database. To sync the data into the object storage I adapted a script, which I found on [this blog article](https://pedal.me.uk/migrating-a-nextcloud-instance-to-amazon-s3/) to create symlinks to every file which are named correctly. These symlinks will then be synced into the object store so that the NextCloud will find the correct files on the correct locations.
+On a regular filesystem NextCloud stores the data in the data directory in the same folder structure as the files are saved by the user. On object storage the files are all located in the base directory and named after the file-ID in the database. To sync the data into the object store I adapted a script, which I found on [this blog article](https://pedal.me.uk/migrating-a-nextcloud-instance-to-amazon-s3/) to create symlinks to every file with the correct names. These symlinks will then be synced into the object store so that the NextCloud will find the correct files at the correct locations.
 
-The scripts will use some variables, which have to be replaced before executing them:
+The scripts use some variables, which have to be replaced before executing them:
 * `<mysql_host>`: The hostname of your NextCloud mysql database
 * `<mysql_database>`: The name of the mysql database
 * `<mysql_user>` and `<mysql_password>`: Credentials with readwrite access to the NextCloud mysql database
@@ -88,7 +87,7 @@ done < ../meta_file_list.txt
 cd ..; rm user_file_list.txt meta_file_list.txt
 ```
 
-When the symlink creation is finished you should have a directoy with a lot of symlinks (about 50.000 in my case). If you check that the namings are correct, you should use `find` or the `-F` option of `ls`, to not sort the files. As a regular s3 sync would've taken very long (about 5 days), I create a small wrapper script, which uploads 40 files in parallel which reduced the upload time to about 5 hours
+When the symlink creation is finished you should have a directoy with a lot of symlinks (about 50.000 in my case). If you check that the namings are correct, you should use `find` or the `-F` option of `ls` to not sort the files (otherwise it will be painfully slow). A regular `s3cmd sync` would've taken very long (about 5 days) to finish the data sync, so I created a small wrapper script, which uploads 40 files in parallel. This reduced the upload time to about 5 hours
 
 ```
 #!/usr/bin/env bash
@@ -103,7 +102,7 @@ cd s3files
 find . | parallel -j40 upload
 ```
 
-After the upload was finished I checked if the data was correctly stored, which might not be the case if some connections failed during the upload. I used the following script to validate that filename and filesize are equal
+After the upload was finished I checked if the data was correctly stored, which might not be the case if some connections failed during the upload. I used the following script to validate that filename and filesize are equal in both locations
 
 ```
 #!/usr/local/bin/env bash
@@ -118,9 +117,9 @@ diff -ruN files_local.txt files_s3.txt
 Files which were different I re-uploaded manually (using the above defined `upload()` function).
 
 #### Step 2 - Update the database
-If the upload was successful and there are no differences between the datasets, the database needs to be updated to reflect the new location. Please be aware, that up to this point no acutal changes were made to the NextCloud instance. Changing the database wrongly *will* break your NextCloud, so make sure that you really understand what you (or the scripts I give you) are doing.
+If the upload was successful and there are no differences between the datasets, the database needs to be updated to reflect the new location. Please be aware, that up to this point no acutal changes were made to the NextCloud instance. Changing the database wrongly *will* break your NextCloud instance, so make sure that you really understand what you (or the scripts I provide) are doing.
 
-I recommend to create a backup/dump of the database before the changes, to have the possibility to roll back the changes
+I recommend to create a backup/dump of the database before the changes to have the possibility to roll them back
 
 ```
 $ mysqldump --result-file=dump.sql <mysql_database>
@@ -135,8 +134,7 @@ EOF
 ```
 
 #### Step 3 - Configure the objectstore
-
-When the database is correctly updated we need to finalize the migration by adding the s3 store to the NextCloud configuration. Therefor edit the file `</path/to/installation>/config/config.json` and add the `objectstore' definition
+When the database is correctly updated we need to finalize the migration by adding the object store to the NextCloud configuration. Therefor edit the file `</path/to/installation>/config/config.json` and add the `objectstore' definition
 
 ```
   1 'objectstore' =>
