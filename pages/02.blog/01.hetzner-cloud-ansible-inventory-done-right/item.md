@@ -10,7 +10,7 @@ I recently switched my private infrastructure to Hetzner Cloud virtual machines.
 ## The problem
 On my old setup I had pretty clear definitions on what virtual machines I was running on my dedicated server. There was one VM for websites, one for LDAP, one for mail, etc etc. But with switching to cloud machines - and setting up the whole setup in a Kubernetes cluster - my machines became less of dedicated machines and more of one of "many" in a cluster.
 
-The first obvious sign is, that I dropped specific names for the nodes. They currently go by the default namings of newly created Hetzner Cloud machines (something like `ubuntu-4gb-ngb1-3`).
+The first obvious sign is, that I dropped specific names for the nodes. They currently go by the default namings of newly created Hetzner Cloud machines (something like `ubuntu-4gb-nbg1-3`).
 
 The next step was to get rid of (quite some) different roles in the ansible playbook. My new playbook only differentiates between a kubernetes worker- and master-node. But then I ran into a small problem: My machines needed a host_vars entry for the wireguard internal IP. As I wanted to get rid of host-specific definitions in ansible I had to look into dynamic inventories... *successfully* :)
 
