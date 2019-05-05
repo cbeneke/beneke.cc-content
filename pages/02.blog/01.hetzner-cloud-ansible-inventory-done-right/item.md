@@ -8,11 +8,14 @@ author: 'Christian Beneke'
 I recently switched my private infrastructure to Hetzner Cloud virtual machines. As I'm using ansible to provision the machines, I was looking into the dynamic inventories of ansible.
 
 ## The problem
-On my old setup I had pretty clear definitions on what virtual machines I was running on my dedicated server. There was one VM for websites, one for LDAP, one for mail, etc etc. But with switching to cloud machines - and setting up the whole setup in a Kubernetes cluster - my machines become less of dedicated machines and more of one of "many" in a cluster.
-The first obvious sign is, that I dropped specific names for the nodes. They currently go by the default namings of newly created Hetzner Cloud machines (something like `ubuntu-4gb-ngb1-3`). The next step was to get rid of (quite some) different roles in the ansible playbook. My new playbook only differentiates between a kubernetes worker- and master-node. But then I ran into a small problem: My machines needed a host_vars entry for the wireguard internal IP. As I wanted to get rid of host-specific definitions in ansible I had to look into dynamic inventories... successfully :)
+On my old setup I had pretty clear definitions on what virtual machines I was running on my dedicated server. There was one VM for websites, one for LDAP, one for mail, etc etc. But with switching to cloud machines - and setting up the whole setup in a Kubernetes cluster - my machines became less of dedicated machines and more of one of "many" in a cluster.
+
+The first obvious sign is, that I dropped specific names for the nodes. They currently go by the default namings of newly created Hetzner Cloud machines (something like `ubuntu-4gb-ngb1-3`).
+
+The next step was to get rid of (quite some) different roles in the ansible playbook. My new playbook only differentiates between a kubernetes worker- and master-node. But then I ran into a small problem: My machines needed a host_vars entry for the wireguard internal IP. As I wanted to get rid of host-specific definitions in ansible I had to look into dynamic inventories... *successfully* :)
 
 ## The solution
-I got hinted to [this repository](https://github.com/hg8496/ansible-hcloud-inventory) providing a small python script which generates a dynamic inventory for Hetzer Cloud hosts. As this would require me to manually set up the HCLOUD_TOKEN environment variable (or a readable file which contains the token) I'm using a small wrapper script to call the python script `./inventory/inventory.sh`
+I got hinted to [this repository](https://github.com/hg8496/ansible-hcloud-inventory) providing a small python script which generates a dynamic inventory for Hetzer Cloud hosts. As this would require me to manually set up the HCLOUD_TOKEN environment variable (or a unencrypted file which contains the token) I'm using a small wrapper script to call the python script `./inventory/inventory.sh`
 
 ```
 #!/usr/bin/env bash
