@@ -38,7 +38,7 @@ which defines that ansible finds the inventory in an inventory folder relative t
 ## Conclusion
 These two small scripts provide me the possibility to just create new Hetzner Cloud virtual machines and run ansible directly after. The servers will among others be grouped by the labels provided on the nodes itself. I am using this to differentiate between master and worker nodes in my cluster: I'm labelling my kubernetes nodes with `kubernetes-role` labels, which are set to `master` or `worker` respectively.
 
-Besides this I'm spanning a wireguard cluster between the nodes and my [patched version of the hcloud-cloud-controller-manager](https://github.com/cbeneke/hcloud-cloud-controller-manager) uses the `kubernetes.hetzner.cloud/internal-ip` label to identify the internal IP of a node. The logical step was to change the wireguard role to also use this label for configuration, which is extremely easy, as labels are also provided as host_vars for the hosts.
+Besides this I'm spanning a wireguard cluster between the nodes and my [patched version of the hcloud-cloud-controller-manager](https://github.com/cbeneke/hcloud-cloud-controller-manager) uses the `kubernetes.hetzner.cloud/internal-ip` label to identify the internal IP of a node. The logical step was to change the wireguard role to also use this label for configuration, which is extremely easy, as labels are also provided in the `hcloud_labels` host_vars for each host.
 
 All of this results in extremly easy expansion of my kubernetes cluster
 
