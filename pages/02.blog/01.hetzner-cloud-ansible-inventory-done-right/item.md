@@ -26,14 +26,14 @@ HCLOUD_TOKEN="$(PAGER=cat ansible-vault view hcloud-token.vault)" python hcloud/
 
 The hcloud directory is the ansible-hcloud-inventory clone, and the `hcloud-token.vault` just holds the Hetzner Cloud API token encrypted with ansible-vault (you can create the file with `$ ansible-vault create hcloud-token.vault`).
 
-My ansible.cfg holds a line
+My `ansible.cfg` holds a line
 
 ```
 [defaults]
 inventory = inventory
 ```
 
-which defines that ansible finds the inventory in an inventory folder relative to the base directory. The inventory.sh script needs to be executable for ansible to use it.
+which defines that ansible finds the inventory in an inventory folder relative to the base directory. The `inventory.sh` script needs to be executable for ansible to use it.
 
 ## Conclusion
 These two small scripts provide me the possibility to just create new Hetzner Cloud virtual machines and run ansible directly after. The servers will among others be grouped by the labels provided on the nodes itself. I am using this to differentiate between master and worker nodes in my cluster: I'm labelling my kubernetes nodes with `kubernetes-role` labels, which are set to `master` or `worker` respectively.
