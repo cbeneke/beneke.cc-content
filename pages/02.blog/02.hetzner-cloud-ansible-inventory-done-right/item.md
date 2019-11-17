@@ -7,6 +7,9 @@ author: 'Christian Beneke'
 
 I recently switched my private infrastructure to Hetzner Cloud virtual machines. As I'm using ansible to provision the machines, I was looking into the dynamic inventories of ansible.
 
+## Edit - 2019-11-17
+Since ansible 2.8 the hetzner cloud team provides an [inventory plugin](https://docs.ansible.com/ansible/latest/plugins/inventory/hcloud.html) to fetch the inventory with ease. Have a look at the [follow-up blog post](https://beneke.cc/blog/hetzner-cloud-ansible-inventory-via-plugin) for further explanations.
+
 ## The problem
 On my old setup I had pretty clear definitions on what virtual machines I was running on my dedicated server. There was one VM for websites, one for LDAP, one for mail, etc etc. But with switching to cloud machines - and setting up the whole setup in a Kubernetes cluster - my machines became less of dedicated machines and more of one of "many" in a cluster.
 
