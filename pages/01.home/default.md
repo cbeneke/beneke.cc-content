@@ -1,10 +1,10 @@
 ---
-title: About
+title: Welcome!
 media_order: worker.jpg
 header_image: worker.jpg
-menu: About
+menu: Home
 ---
 
-Hey, I am Christian Beneke, a Site Reliability Engineer currently working in Berlin.
+Thanks for visiting my blog. If you're interested in IT stuff like linux, dedicated root servers, kubernetes and the troubles you get from any of them, you're welcome to read my upcoming blog-posts. If not, feel free to look around anyway!
 
-I am passionate about [Kubernetes](https://kubernetes.io/), running small to medium scale clusters in production since 2018 and privately a little bit longer. I am coming from an IT Operations background and studied Mathematics in Berlin. Since I work at [TradeRepublic](https://traderepublic.com/de-de) I am also getting more and more interested in the financial world.
+I will only write new blog-posts, whenever I feel the urge to share some knowledge. Thus the posts may be irregulary, but I try to keep the quality up.
